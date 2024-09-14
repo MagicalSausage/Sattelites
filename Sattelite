@@ -1,10 +1,14 @@
 import pgzrun
 import random
+import time
 WIDTH = 800
 HEIGHT = 600
 TITLE = "Sattelites"
 sattelites = []
 target = 0
+lines = []
+start = time.time()
+total = 0
 for i in range(7):
   X = random.randint(50,750)
   Y = random.randint(50,550)
@@ -19,13 +23,26 @@ def draw():
       sattelite.draw()
       satteliteorder += 1
       screen.draw.text(str(satteliteorder),(sattelite.x,sattelite.y + 25),color = "white")
-    screen.draw.text(str(Timer),(50,50),color = "white")
+    screen.draw.text(str(round(total,2)),(50,50),color = "white")
+    for line in lines:
+      screen.draw.line(line[0],line[1],"white")
+       
 
 def update():
-    pass
+  global total,start
+  if target <= 6:
+    total = time.time() - start
 
 def on_mouse_down(pos):
-   if sattelites[target].collidepoint(pos):
+  global target,lines
+  if target <= 6:
+    if sattelites[target].collidepoint(pos):
+      if target > 0:
+        lines.append((sattelites[target - 1].pos, sattelites[target].pos))
+      target += 1
+    else:
+      target = 0
+      lines = []
       
       
    
